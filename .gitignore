@@ -1,0 +1,101 @@
+# ========================================
+# Python
+# ========================================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Pipenv / Poetry
+Pipfile.lock
+poetry.lock
+
+# Pyenv
+.python-version
+
+# ========================================
+# Distribution / Packaging
+# ========================================
+build/
+dist/
+sdist/
+*.egg-info/
+.eggs/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ========================================
+# Testing & Coverage
+# ========================================
+htmlcov/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# ========================================
+# Environments / Secrets
+# ========================================
+.env
+.env.*
+*.env
+.envrc
+secrets/
+config.env
+*.key
+
+# ========================================
+# Jupyter
+# ========================================
+.ipynb_checkpoints/
+*.ipynb
+
+# ========================================
+# Database
+# ========================================
+*.sqlite3
+*.db
+
+# SQLAlchemy / Alembic cache
+alembic/versions/*__pycache__/
+alembic/versions/*.pyc
+
+# ========================================
+# Editors / IDEs
+# ========================================
+
+# VSCode
+.vscode/
+
+# JetBrains / PyCharm
+.idea/
+*.iml
+
+# ========================================
+# OS / File System
+# ========================================
+.DS_Store
+Thumbs.db
+desktop.ini
+*~
+
+# ========================================
+# Misc
+# ========================================
+*.log
+*.bak
+*.tmp
