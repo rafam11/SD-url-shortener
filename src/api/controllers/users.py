@@ -1,6 +1,4 @@
-from typing import Annotated
 from fastapi import APIRouter, status, Depends
-from sqlalchemy.orm import Session
 
 from src.api.services.users import UsersService
 

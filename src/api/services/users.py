@@ -8,7 +8,7 @@ from src.db.schemas.users import CreateUserRequest, UserResponse
 class UsersService:
 
     @staticmethod
-    def create_user(db: Session, data: CreateUserRequest) -> Users:
+    def create_user(db: Session, data: CreateUserRequest) -> UserResponse:
         user = Users(
             email=data.email,
             username=data.username,

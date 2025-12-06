@@ -99,3 +99,5 @@ desktop.ini
 *.log
 *.bak
 *.tmp
+
+curl.txt
