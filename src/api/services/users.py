@@ -2,17 +2,32 @@ from sqlalchemy.orm import Session
 from src.api.repositories.users import UsersRepository
 
 from src.db.models.users import Users
-from src.db.schemas.users import CreateUserRequest, UserResponse
+from src.db.schemas.user import CreateUserRequest
 
 
 class UsersService:
 
-    @staticmethod
-    def create_user(db: Session, data: CreateUserRequest) -> UserResponse:
-        user = Users(
-            email=data.email,
-            username=data.username,
-            password_hash=data.password_hash
+    def __init__(
+        self,
+        repository: UsersRepository
+    ):
+        self.repository = repository
+
+    def create_user(
+        self,
+        session: Session,
+        user: CreateUserRequest
+    ) -> Users:
+        
+        # TODO: Hash password before creating user.
+        hashed_password = user.password
+
+        new_user = Users(
+            email=user.email,
+            username=user.username,
+            password_hash=hashed_password
         )
-        db_user = UsersRepository.create(db, user)
-        return UserResponse.model_validate(db_user)
+        
+        return self.repository.create(
+            session, new_user
+        )

@@ -8,7 +8,7 @@ class CreateUserRequest(BaseModel):
 
     email: EmailStr
     username: str | None = None
-    password_hash: str
+    password: str
 
 
 class UserResponse(BaseModel):
