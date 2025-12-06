@@ -1,0 +1,2 @@
+ENV_FILE_FORMAT = ".env"
+UTF8_ENCODING = "utf-8"

@@ -1,7 +1,8 @@
 from datetime import datetime
 
-from db.base import Base
-from db.utils import constants as db_cons
+from src.db.base import Base
+from src.db.utils import constants as db_cons
+
 from sqlalchemy import ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import TIMESTAMP, BigInteger, Boolean, Integer, String
@@ -14,7 +15,7 @@ class Users(Base):
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
     email: Mapped[str] = mapped_column(String, unique=True, nullable=False)
     username: Mapped[str | None] = mapped_column(String, unique=True, nullable=True)
-    password_hash: Mapped[str] = mapped_column(String, nullable=False, repr=False)
+    password_hash: Mapped[str] = mapped_column(String, nullable=False)
     is_active: Mapped[bool] = mapped_column(
         Boolean, server_default=db_cons.SQLALCHEMY_BOOL_TRUE
     )
