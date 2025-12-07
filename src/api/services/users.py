@@ -1,4 +1,5 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.api.repositories.users import UsersRepository
 
 from src.db.models.users import Users
@@ -7,17 +8,10 @@ from src.db.schemas.user import CreateUserRequest
 
 class UsersService:
 
-    def __init__(
-        self,
-        repository: UsersRepository
-    ):
-        self.repository = repository
+    def __init__(self, session: AsyncSession):
+        self.repository = UsersRepository(session)
 
-    def create_user(
-        self,
-        session: Session,
-        user: CreateUserRequest
-    ) -> Users:
+    def create_user(self, user: CreateUserRequest) -> Users:
         
         # TODO: Hash password before creating user.
         hashed_password = user.password
@@ -28,6 +22,4 @@ class UsersService:
             password_hash=hashed_password
         )
         
-        return self.repository.create(
-            session, new_user
-        )
+        return self.repository.create(new_user)

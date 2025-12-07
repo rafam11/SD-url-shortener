@@ -1,15 +1,47 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.ext.asyncio import (
+    AsyncSession,
+    AsyncEngine,
+    create_async_engine,
+    async_sessionmaker
+)
+from src.db.utils.settings import settings
+from typing import AsyncGenerator
 
-from src.db.utils.settings import Settings
 
-settings = Settings()
-engine = create_engine(str(settings.postgres_url))
-session = sessionmaker(bind=engine, autoflush=False)
+class SessionManager:
+    """Manages asynchronous database sessions."""
 
-def get_db():
-    db = session()
-    try:
-        yield db
-    finally:
-        db.close()
+    def __init__(self):
+        self.engine: AsyncEngine | None = None
+        self.session_factory: async_sessionmaker[AsyncEngine] | None = None
+
+    def run_engine(self):
+        """Initialize the database engine and session factory."""
+        self.engine = create_async_engine(
+            url=settings.postgres_url,
+            echo=True
+        )
+        self.session_factory = async_sessionmaker(
+            self.engine,
+            expire_on_commit=False,
+            autoflush=False,
+            class_=AsyncSession
+        )
+
+    async def get_session(self) -> AsyncGenerator[AsyncSession, None]:
+        """Yield a database session."""
+        if not self.session_factory:
+            raise InvalidRequestError("Session has not been initialized")
+
+        async with self.session_factory as session:
+            try:
+                yield session
+            except Exception as e:
+                await session.rollback()
+                raise RuntimeError(f"Database session error: {e}")
+
+    async def close(self) -> None:
+        """Dispose of the database engine."""
+        if self.engine:
+            await self.engine.dispose()

@@ -1,15 +1,11 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from src.api.repositories.base import BaseRepository
 
-from src.db.models.users import Users
 
-class UsersRepository:
+class UsersRepository(BaseRepository):
 
-    def create(
+    def __init__(
         self,
-        db: Session, 
-        user: Users
-    ) -> Users:
-        db.add(user)
-        db.commit()
-        db.refresh(user)
-        return user
+        session: AsyncSession
+    ):
+        super().__init__(session)
