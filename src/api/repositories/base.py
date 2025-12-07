@@ -24,6 +24,6 @@ class BaseRepository(Generic[ModelType]):
         model: ModelType
     ) -> ModelType:
         self.session.add(model)
-        self.session.commit()
-        self.session.refresh(model)
+        await self.session.commit()
+        await self.session.refresh(model)
         return model

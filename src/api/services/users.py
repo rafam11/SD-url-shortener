@@ -11,7 +11,7 @@ class UsersService:
     def __init__(self, session: AsyncSession):
         self.repository = UsersRepository(session)
 
-    def create_user(self, user: CreateUserRequest) -> Users:
+    async def create_user(self, user: CreateUserRequest) -> Users:
         
         # TODO: Hash password before creating user.
         hashed_password = user.password
@@ -22,4 +22,4 @@ class UsersService:
             password_hash=hashed_password
         )
         
-        return self.repository.create(new_user)
+        return await self.repository.create(new_user)

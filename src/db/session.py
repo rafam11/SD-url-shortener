@@ -12,9 +12,9 @@ from typing import AsyncGenerator
 class SessionManager:
     """Manages asynchronous database sessions."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.engine: AsyncEngine | None = None
-        self.session_factory: async_sessionmaker[AsyncEngine] | None = None
+        self.session_factory: async_sessionmaker[AsyncSession] | None = None
 
     def run_engine(self):
         """Initialize the database engine and session factory."""
@@ -34,7 +34,7 @@ class SessionManager:
         if not self.session_factory:
             raise InvalidRequestError("Session has not been initialized")
 
-        async with self.session_factory as session:
+        async with self.session_factory() as session:
             try:
                 yield session
             except Exception as e:
