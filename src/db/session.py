@@ -19,7 +19,7 @@ class SessionManager:
     def run_engine(self):
         """Initialize the database engine and session factory."""
         self.engine = create_async_engine(
-            url=settings.postgres_url,
+            url=str(settings.postgres_url),
             echo=True
         )
         self.session_factory = async_sessionmaker(
@@ -45,3 +45,6 @@ class SessionManager:
         """Dispose of the database engine."""
         if self.engine:
             await self.engine.dispose()
+
+
+session_manager: SessionManager = SessionManager()

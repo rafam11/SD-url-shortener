@@ -1,9 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from src.api.controllers.users import router as users_router
-from src.db.session import SessionManager
-
-session_manager: SessionManager = SessionManager()
+from src.db.session import session_manager
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

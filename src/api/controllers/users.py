@@ -1,18 +1,15 @@
 from fastapi import APIRouter, status, Depends
 
-from src.main import session_manager
-
 from src.api.services.users import UsersService
 from src.db.schemas.user import CreateUserRequest, UserResponse
+from src.db.session import session_manager
 
 from sqlalchemy.ext.asyncio import AsyncSession
-
 
 router: APIRouter = APIRouter(
     prefix="/users",
     tags=["users"]
 )
-
 
 @router.post(
     path="/",
