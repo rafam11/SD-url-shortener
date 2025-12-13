@@ -37,9 +37,9 @@ class SessionManager:
         async with self.session_factory() as session:
             try:
                 yield session
-            except Exception as e:
+            except Exception:
                 await session.rollback()
-                raise RuntimeError(f"Database session error: {e}")
+                raise
 
     async def close(self) -> None:
         """Dispose of the database engine."""
