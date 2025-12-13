@@ -1,7 +1,7 @@
-from fastapi import APIRouter, status, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from src.api.services.users import UsersService
-from src.db.schemas.user import CreateUserRequest, UserResponse
+from src.db.schemas.user import CreateUserRequest, LoginUserRequest, UserResponse
 from src.db.session import session_manager
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -23,3 +23,19 @@ async def create_user(
     session: AsyncSession = Depends(session_manager.get_session)
 ):
     return await UsersService(session).create_user(new_user)
+
+@router.post(
+    path="/token",
+    response_model=UserResponse,
+)
+async def login_user(
+    user: LoginUserRequest,
+    session: AsyncSession = Depends(session_manager.get_session)
+):
+    result = await UsersService(session).login_user(user)
+    if not result:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid username or password"
+        )
+    return result

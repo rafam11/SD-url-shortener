@@ -11,6 +11,13 @@ class CreateUserRequest(BaseModel):
     password: str
 
 
+class LoginUserRequest(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    username: str
+    password: str
+
+
 class UserResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     

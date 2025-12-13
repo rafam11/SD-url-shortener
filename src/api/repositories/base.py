@@ -1,7 +1,8 @@
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.base import Base
 
-from typing import Generic, TypeVar
+from typing import Any, Generic, Mapping, TypeVar
 
 ModelType = TypeVar("ModelType", bound=Base)
 
@@ -27,3 +28,18 @@ class BaseRepository(Generic[ModelType]):
         await self.session.commit()
         await self.session.refresh(model)
         return model
+
+    async def retrieve_by(
+        self,
+        model: ModelType,
+        **filters: Mapping[str, Any]
+    ) -> ModelType | None:
+        
+        for key, _ in filters.items():
+            if not hasattr(model, key):
+                raise ValueError(
+                    f"Model {model.__name__} has no attribute {key}"
+                )
+
+        stmt = select(model).filter_by(**filters)
+        return await self.session.scalar(stmt)

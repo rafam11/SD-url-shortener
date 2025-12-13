@@ -14,6 +14,8 @@ class Settings(BaseSettings):
     postgres_host: str | None = None
     postgres_port: int | None = None
 
+    jwt_secret_key: str | None = None
+
     @property
     def postgres_url(self) -> PostgresDsn:
         return PostgresDsn.build(
