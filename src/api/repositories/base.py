@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.base import Base
 
-from typing import Any, Generic, Mapping, TypeVar
+from typing import Any, Generic, TypeVar
 
 ModelType = TypeVar("ModelType", bound=Base)
 
@@ -31,8 +31,8 @@ class BaseRepository(Generic[ModelType]):
 
     async def retrieve_by(
         self,
-        model: ModelType,
-        **filters: Mapping[str, Any]
+        model: type[ModelType],
+        **filters: Any
     ) -> ModelType | None:
         
         for key, _ in filters.items():

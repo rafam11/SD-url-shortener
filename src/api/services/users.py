@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.repositories.users import UsersRepository
-from src.auth.helpers.hasher import Hasher
+from src.auth.helpers.security import get_password_hash, verify_password
 from src.db.models.users import Users
 from src.db.schemas.user import CreateUserRequest, LoginUserRequest
 
@@ -13,7 +13,7 @@ class UsersService:
 
     async def create_user(self, user: CreateUserRequest) -> Users:
         
-        hashed_password = Hasher.get_password_hash(user.password)
+        hashed_password = get_password_hash(user.password)
 
         new_user = Users(
             email=user.email,
@@ -27,6 +27,6 @@ class UsersService:
         existing_user = await self.repository.retrieve_by(Users, username=user.username)
         if not existing_user:
             return
-        if not Hasher.verify_password(user.password, existing_user.password_hash):
+        if not verify_password(user.password, existing_user.password_hash):
             return
         return existing_user

@@ -1,11 +1,12 @@
+import src.core.constants as cons
+
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from src.api.services.users import UsersService
+from src.auth.helpers.security import create_access_token
 from src.db.schemas.user import CreateUserRequest, LoginUserRequest, UserResponse
-from src.db.schemas.token import AccessToken
+from src.db.schemas.token import TokenResponse
 from src.db.session import session_manager
-
-from src.auth.helpers.jwt_token import JwtToken
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -28,7 +29,12 @@ async def create_user(
     return await UsersService(session).create_user(new_user)
 
 @router.post(
-    path="/token"
+    path="/token",
+    response_model=TokenResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Authenticate a user and return an access token",
+    description="Authenticate a user using their credentials. If valid, the server issues an access token that can be" \
+    " used to authorize subsequent API requests."
 )
 async def login_user(
     user: LoginUserRequest,
@@ -38,10 +44,14 @@ async def login_user(
     if not logged_user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid username or password"
+            detail="Invalid username or password",
+            headers={
+                cons.WWW_AUTH_HEADER: cons.BEARER_AUTH
+            }
         )
-    access_token = JwtToken.create_access_token(logged_user.username)
-    return AccessToken(
-        token=access_token,
-        type="bearer"
+    access_token = create_access_token(logged_user.username)
+    return TokenResponse(
+        access_token=access_token,
+        token_type=cons.BEARER_AUTH.lower(),
+        expires_in=3600 * cons.DEFAULT_EXPIRE_JWT_TOKEN
     )

@@ -1,8 +1,7 @@
+import src.core.constants as cons
+
 from datetime import datetime
-
 from src.db.base import Base
-from src.db.utils import constants as db_cons
-
 from sqlalchemy import ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import TIMESTAMP, BigInteger, Boolean, Integer, String
@@ -17,10 +16,10 @@ class Users(Base):
     username: Mapped[str | None] = mapped_column(String, unique=True, nullable=True)
     password_hash: Mapped[str] = mapped_column(String, nullable=False)
     is_active: Mapped[bool] = mapped_column(
-        Boolean, server_default=db_cons.SQLALCHEMY_BOOL_TRUE
+        Boolean, server_default=cons.SQLALCHEMY_BOOL_TRUE
     )
     is_verified: Mapped[bool] = mapped_column(
-        Boolean, server_default=db_cons.SQLALCHEMY_BOOL_FALSE
+        Boolean, server_default=cons.SQLALCHEMY_BOOL_FALSE
     )
     role: Mapped[str] = mapped_column("role", String, server_default="'user'")
     created_at: Mapped[datetime] = mapped_column(TIMESTAMP, server_default=func.now())
@@ -34,7 +33,7 @@ class Users(Base):
     logins: Mapped[list["UserLogins"]] = relationship(
         "UserLogins",
         back_populates="user",
-        cascade=db_cons.SQLALCHEMY_DELETE_ORPHAN_CASCADE,
+        cascade=cons.SQLALCHEMY_DELETE_ORPHAN_CASCADE,
     )
 
 
@@ -45,7 +44,7 @@ class UserLogins(Base):
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column(
         BigInteger,
-        ForeignKey("auth.users.id", ondelete=db_cons.SQLALCHEMY_KEYWORD_CASCADE),
+        ForeignKey("auth.users.id", ondelete=cons.SQLALCHEMY_KEYWORD_CASCADE),
         nullable=False,
     )
     login_at: Mapped[datetime] = mapped_column(TIMESTAMP, server_default=func.now())

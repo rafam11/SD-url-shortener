@@ -1,8 +1,9 @@
 from pydantic import BaseModel, ConfigDict
 
 
-class AccessToken(BaseModel):
+class TokenResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    token: str
-    type: str
+    access_token: str
+    token_type: str
+    expires_in: int

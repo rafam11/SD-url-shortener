@@ -1,18 +1,16 @@
-from src.core import constants as cons
-
-from pydantic import Field, PostgresDsn
+from pydantic import PostgresDsn
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
 
-    postgres_db: str
-    postgres_user: str
-    postgres_password: str
-    postgres_host: str
-    postgres_port: int
+    postgres_db: str | None = None
+    postgres_user: str | None = None
+    postgres_password: str | None = None
+    postgres_host: str | None = None
+    postgres_port: int | None = None
     
-    secret_key: str
+    secret_key: str | None = None
 
     @property
     def postgres_url(self) -> PostgresDsn:
