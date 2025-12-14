@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.repositories.users import UsersRepository
 from src.auth.helpers.security import get_password_hash, verify_password
-from src.db.models.users import Users
+from src.db.models.users import Users, UserLogins
 from src.db.schemas.user import CreateUserRequest, LoginUserRequest
 
 
@@ -29,4 +29,10 @@ class UsersService:
             return
         if not verify_password(user.password, existing_user.password_hash):
             return
+        
+        new_login = UserLogins(
+            user_id = existing_user.id
+        )
+        await self.repository.create(new_login)
+
         return existing_user
