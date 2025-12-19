@@ -3,9 +3,5 @@ from src.api.repositories.base import BaseRepository
 
 
 class UsersRepository(BaseRepository):
-
-    def __init__(
-        self,
-        session: AsyncSession
-    ):
+    def __init__(self, session: AsyncSession):
         super().__init__(session)

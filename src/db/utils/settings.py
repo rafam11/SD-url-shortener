@@ -3,14 +3,13 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
+    postgres_db: str
+    postgres_user: str
+    postgres_password: str
+    postgres_host: str
+    postgres_port: int
 
-    postgres_db: str | None = None
-    postgres_user: str | None = None
-    postgres_password: str | None = None
-    postgres_host: str | None = None
-    postgres_port: int | None = None
-    
-    secret_key: str | None = None
+    secret_key: str
 
     @property
     def postgres_url(self) -> PostgresDsn:
@@ -20,7 +19,8 @@ class Settings(BaseSettings):
             password=self.postgres_password,
             host=self.postgres_host,
             port=self.postgres_port,
-            path=self.postgres_db
+            path=self.postgres_db,
         )
+
 
 settings = Settings()

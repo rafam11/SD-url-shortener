@@ -8,6 +8,13 @@ repos:
         types: [python]
         args: ["check", "--fix"]
 
+      - id: ruff-format
+        name: ruff (format)
+        entry: ruff
+        language: system
+        types: [python]
+        args: ["format"]
+
       - id: mypy
         name: mypy
         entry: mypy

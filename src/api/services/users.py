@@ -7,20 +7,16 @@ from src.db.schemas.user import CreateUserRequest, LoginUserRequest
 
 
 class UsersService:
-
     def __init__(self, session: AsyncSession):
         self.repository = UsersRepository(session)
 
     async def create_user(self, user: CreateUserRequest) -> Users:
-        
         hashed_password = get_password_hash(user.password)
 
         new_user = Users(
-            email=user.email,
-            username=user.username,
-            password_hash=hashed_password
+            email=user.email, username=user.username, password_hash=hashed_password
         )
-        
+
         return await self.repository.create(new_user)
 
     async def login_user(self, user: LoginUserRequest):
@@ -29,10 +25,8 @@ class UsersService:
             return
         if not verify_password(user.password, existing_user.password_hash):
             return
-        
-        new_login = UserLogins(
-            user_id = existing_user.id
-        )
+
+        new_login = UserLogins(user_id=existing_user.id)
         await self.repository.create(new_login)
 
         return existing_user

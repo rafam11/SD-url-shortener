@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import (
     AsyncSession,
     AsyncEngine,
     create_async_engine,
-    async_sessionmaker
+    async_sessionmaker,
 )
 from src.db.utils.settings import settings
 from typing import AsyncGenerator
@@ -18,15 +18,9 @@ class SessionManager:
 
     def run_engine(self):
         """Initialize the database engine and session factory."""
-        self.engine = create_async_engine(
-            url=str(settings.postgres_url),
-            echo=True
-        )
+        self.engine = create_async_engine(url=str(settings.postgres_url), echo=True)
         self.session_factory = async_sessionmaker(
-            self.engine,
-            expire_on_commit=False,
-            autoflush=False,
-            class_=AsyncSession
+            self.engine, expire_on_commit=False, autoflush=False, class_=AsyncSession
         )
 
     async def get_session(self) -> AsyncGenerator[AsyncSession, None]:
