@@ -49,7 +49,7 @@ async def login_user(
             headers={cons.WWW_AUTH_HEADER: cons.BEARER_AUTH},
         )
     access_token = create_access_token(logged_user.id)
-    
+
     return TokenResponse(
         access_token=access_token,
         token_type=cons.BEARER_AUTH.lower(),

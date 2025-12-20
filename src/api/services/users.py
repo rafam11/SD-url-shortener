@@ -22,7 +22,7 @@ class UsersService:
 
     async def login_user(self, user: LoginUserRequest) -> Users:
         existing_user = await self.repository.retrieve_by(Users, username=user.username)
-        
+
         if not existing_user or not verify_password(
             user.password, existing_user.password_hash
         ):
