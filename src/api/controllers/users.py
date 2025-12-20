@@ -3,9 +3,11 @@ import src.core.constants as cons
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from src.api.services.users import UsersService
-from src.auth.helpers.security import create_access_token
-from src.db.schemas.user import CreateUserRequest, LoginUserRequest, UserResponse
+from src.auth.helpers.security import create_access_token, verify_access_token
+from src.core.errors import InvalidCredentialsError
 from src.db.schemas.token import TokenResponse
+from src.db.schemas.url import LongUrlRequest
+from src.db.schemas.user import CreateUserRequest, LoginUserRequest, UserResponse
 from src.db.session import session_manager
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -28,7 +30,7 @@ async def create_user(
 
 
 @router.post(
-    path="/token",
+    path="/token/",
     response_model=TokenResponse,
     status_code=status.HTTP_200_OK,
     summary="Authenticate a user and return an access token",
@@ -38,16 +40,27 @@ async def create_user(
 async def login_user(
     user: LoginUserRequest, session: AsyncSession = Depends(session_manager.get_session)
 ):
-    logged_user = await UsersService(session).login_user(user)
-    if not logged_user:
+    try:
+        logged_user = await UsersService(session).login_user(user)
+    except InvalidCredentialsError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid username or password",
             headers={cons.WWW_AUTH_HEADER: cons.BEARER_AUTH},
         )
-    access_token = create_access_token(logged_user.username)
+    access_token = create_access_token(logged_user.id)
+    
     return TokenResponse(
         access_token=access_token,
         token_type=cons.BEARER_AUTH.lower(),
         expires_in=3600 * cons.DEFAULT_EXPIRE_JWT_TOKEN,
     )
+
+
+@router.post(path="/url/", status_code=status.HTTP_201_CREATED)
+async def short_url(
+    long_url: LongUrlRequest,
+    current_user: str = Depends(verify_access_token),
+    session: AsyncSession = Depends(session_manager.get_session),
+):
+    return long_url.long_url

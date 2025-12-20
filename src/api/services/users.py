@@ -2,6 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.api.repositories.users import UsersRepository
 from src.auth.helpers.security import get_password_hash, verify_password
+from src.core.errors import InvalidCredentialsError
 from src.db.models.users import Users, UserLogins
 from src.db.schemas.user import CreateUserRequest, LoginUserRequest
 
@@ -19,12 +20,13 @@ class UsersService:
 
         return await self.repository.create(new_user)
 
-    async def login_user(self, user: LoginUserRequest):
+    async def login_user(self, user: LoginUserRequest) -> Users:
         existing_user = await self.repository.retrieve_by(Users, username=user.username)
-        if not existing_user:
-            return
-        if not verify_password(user.password, existing_user.password_hash):
-            return
+        
+        if not existing_user or not verify_password(
+            user.password, existing_user.password_hash
+        ):
+            raise InvalidCredentialsError()
 
         new_login = UserLogins(user_id=existing_user.id)
         await self.repository.create(new_login)
