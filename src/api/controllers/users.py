@@ -3,10 +3,9 @@ import src.core.constants as cons
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from src.api.services.users import UsersService
-from src.auth.helpers.security import create_access_token, verify_access_token
+from src.auth.helpers.security import create_access_token
 from src.core.errors import InvalidCredentialsError
 from src.db.schemas.token import TokenResponse
-from src.db.schemas.url import LongUrlRequest
 from src.db.schemas.user import CreateUserRequest, LoginUserRequest, UserResponse
 from src.db.session import session_manager
 
@@ -55,12 +54,3 @@ async def login_user(
         token_type=cons.BEARER_AUTH.lower(),
         expires_in=3600 * cons.DEFAULT_EXPIRE_JWT_TOKEN,
     )
-
-
-@router.post(path="/url/", status_code=status.HTTP_201_CREATED)
-async def short_url(
-    long_url: LongUrlRequest,
-    current_user: str = Depends(verify_access_token),
-    session: AsyncSession = Depends(session_manager.get_session),
-):
-    return long_url.long_url

@@ -1,4 +1,4 @@
-from pydantic import PostgresDsn
+from pydantic import MongoDsn, PostgresDsn
 from pydantic_settings import BaseSettings
 
 
@@ -11,8 +11,14 @@ class Settings(BaseSettings):
 
     secret_key: str
 
+    mongo_db: str
+    mongo_user: str
+    mongo_password: str
+    mongo_host: str
+    mongo_port: int
+
     @property
-    def postgres_url(self) -> PostgresDsn:
+    def postgres_uri(self) -> PostgresDsn:
         return PostgresDsn.build(
             scheme="postgresql+asyncpg",
             username=self.postgres_user,
@@ -20,6 +26,17 @@ class Settings(BaseSettings):
             host=self.postgres_host,
             port=self.postgres_port,
             path=self.postgres_db,
+        )
+
+    @property
+    def mongo_uri(self) -> MongoDsn:
+        return MongoDsn.build(
+            scheme="mongodb",
+            username=self.mongo_user,
+            password=self.mongo_password,
+            host=self.mongo_host,
+            port=self.mongo_port,
+            path=self.mongo_db,
         )
 
 

@@ -38,11 +38,11 @@ async def verify_access_token(
         payload = jwt.decode(
             jwt=token, key=settings.secret_key, algorithms=[cons.HMAC_SHA256_ALGORITHM]
         )
-        username = payload.get("sub")
+        user_id = payload.get("sub")
     except jwt.InvalidTokenError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Credentials cannot be validated.",
             headers={cons.WWW_AUTH_HEADER: cons.BEARER_AUTH},
         )
-    return username
+    return user_id

@@ -1,5 +1,5 @@
 services:
-  db:
+  postgres:
     image: postgres:16-alpine
     container_name: postgres_service
     environment:
@@ -9,21 +9,24 @@ services:
     ports:
       - "${POSTGRES_PORT}:5432"
     volumes:
-      - ./src/db/init:/docker-entrypoint-initdb.d
+      - ./src/db/init/postgres:/docker-entrypoint-initdb.d
       - type: tmpfs 
         target: /var/lib/postgresql/data
     restart: unless-stopped
-    
-  cache:
-    image: redis:7-alpine
-    container_name: redis_service
+  mongo:
+    image: mongo:7
+    container_name: mongodb_service
+    command: mongod --quiet
     ports:
-      - "6379:6379"
+      - "${MONGO_PORT}:27017"
     environment:
-      REDIS_PASSWORD: ${CACHE_PASSWORD}
-    command: ["redis-server", "--appendonly", "yes"]
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DB}
     volumes:
-      - cache:/data
+      - ./src/db/init/mongo:/docker-entrypoint-initdb.d
+      - type: tmpfs 
+        target: /data/db
     restart: unless-stopped
   api:
     build:
@@ -33,8 +36,8 @@ services:
     ports:
       - "8000:80"
     depends_on:
-      - db
-      - cache
+      - postgres
+      - mongo
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -43,7 +46,3 @@ services:
       POSTGRES_PORT: ${POSTGRES_PORT}
       SECRET_KEY: ${SECRET_KEY}
     restart: unless-stopped
-
-volumes:
-  data_sql:
-  cache:
