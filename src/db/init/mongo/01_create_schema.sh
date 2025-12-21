@@ -69,6 +69,10 @@ if (db.getCollectionNames().includes("urls")) {
                         bsonType: "bool",
                         description: "'is_active' must be a bool and is required"
                     },
+                    last_accessed_at: {
+                        bsonType: ["date", "null"],
+                        description: "'last_accessed_at' must be a date"
+                    },
                     click_count: {
                         bsonType: "int",
                         description: "'click_count' must be an int and is required"

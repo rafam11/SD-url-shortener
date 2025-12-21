@@ -14,6 +14,6 @@ class URLsService:
             short_url="abcd123",
             long_url=str(request_url.long_url),
             expires_at=request_url.expires,
-            user_id=int(user_id),
+            user_id=user_id,
         )
         return await self.repository.insert(url)

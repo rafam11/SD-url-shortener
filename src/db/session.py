@@ -54,7 +54,7 @@ class MongoClient:
         if cls._client is not None:
             return
         try:
-            client = AsyncMongoClient(host=settings.mongo_uri)
+            client = AsyncMongoClient(host=str(settings.mongo_uri))
             await client.admin.command("ping")
             cls._client = client
         except ConnectionFailure as exc:
