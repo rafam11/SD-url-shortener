@@ -1,15 +1,15 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.repositories.users import UsersRepository
+from src.api.repositories.users import UserRepository
 from src.auth.helpers.security import get_password_hash, verify_password
 from src.core.errors import InvalidCredentialsError
 from src.db.models.sqlalchemy import Users, UserLogins
 from src.db.schemas.user import CreateUserRequest, LoginUserRequest
 
 
-class UsersService:
+class UserService:
     def __init__(self, session: AsyncSession):
-        self.repository = UsersRepository(session)
+        self.repository = UserRepository(session)
 
     async def create_user(self, user: CreateUserRequest) -> Users:
         hashed_password = get_password_hash(user.password)

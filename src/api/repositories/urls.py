@@ -4,7 +4,7 @@ from src.db.models.pydantic import URLModel
 from src.db.utils.settings import settings
 
 
-class URLsRepository(BaseMongoRepository):
+class URLRepository(BaseMongoRepository):
     def __init__(self, client: AsyncMongoClient):
         super().__init__(
             client=client,

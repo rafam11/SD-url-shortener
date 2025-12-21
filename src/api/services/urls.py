@@ -1,13 +1,13 @@
 from pymongo import AsyncMongoClient
 
-from src.api.repositories.urls import URLsRepository
+from src.api.repositories.urls import URLRepository
 from src.db.models.pydantic import URLModel
 from src.db.schemas.url import LongUrlRequest
 
 
-class URLsService:
+class URLService:
     def __init__(self, client: AsyncMongoClient):
-        self.repository = URLsRepository(client)
+        self.repository = URLRepository(client)
 
     async def shorten_url(self, user_id: str, request_url: LongUrlRequest) -> URLModel:
         url = URLModel(

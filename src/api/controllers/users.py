@@ -1,15 +1,13 @@
-import src.core.constants as cons
-
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.services.users import UsersService
+from src.api.services.users import UserService
 from src.auth.helpers.security import create_access_token
+from src.core import constants as cons
 from src.core.errors import InvalidCredentialsError
 from src.db.schemas.token import TokenResponse
 from src.db.schemas.user import CreateUserRequest, LoginUserRequest, UserResponse
 from src.db.session import session_manager
-
-from sqlalchemy.ext.asyncio import AsyncSession
 
 router: APIRouter = APIRouter(prefix="/users", tags=["users"])
 
@@ -25,7 +23,7 @@ async def create_user(
     new_user: CreateUserRequest,
     session: AsyncSession = Depends(session_manager.get_session),
 ):
-    return await UsersService(session).create_user(new_user)
+    return await UserService(session).create_user(new_user)
 
 
 @router.post(
@@ -40,7 +38,7 @@ async def login_user(
     user: LoginUserRequest, session: AsyncSession = Depends(session_manager.get_session)
 ):
     try:
-        logged_user = await UsersService(session).login_user(user)
+        logged_user = await UserService(session).login_user(user)
     except InvalidCredentialsError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
