@@ -1,8 +1,12 @@
 from pydantic import BaseModel
 from pymongo import AsyncMongoClient
+from pymongo.errors import DuplicateKeyError
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from src.core import constants as cons
+from src.core.errors import RecordAlreadyExists
 from src.db.base import Base
+from src.db.utils.mongo import retry
 
 from typing import Any, Generic, TypeVar
 
@@ -47,20 +51,32 @@ class BaseMongoRepository(Generic[PydanticModelType]):
     Class is meant to be subclasses for specific models.
     """
 
+    collection_name: str
+
     def __init__(
         self,
         client: AsyncMongoClient,
         model_class: type[PydanticModelType],
         database_name: str,
-        collection_name: str,
     ):
         self.client = client
         self.model_class = model_class
         self.database = client.get_database(database_name)
-        self.collection = self.database.get_collection(collection_name)
+        self.collection = self.database.get_collection(self.collection_name)
 
+    @retry(times=cons.NUM_RETRIES_BEFORE_FAILING)
     async def insert(self, model: PydanticModelType) -> PydanticModelType:
         new_record = model.model_dump(by_alias=True, exclude={"id"})
-        result = await self.collection.insert_one(new_record)
-        new_record["_id"] = result.inserted_id
-        return self.model_class.model_validate(new_record)
+        try:
+            result = await self.collection.insert_one(new_record)
+            new_record["_id"] = result.inserted_id
+            return self.model_class.model_validate(new_record)
+        except DuplicateKeyError as e:
+            raise RecordAlreadyExists() from e
+
+    @retry(times=cons.NUM_RETRIES_BEFORE_FAILING)
+    async def retrieve_by(self, filters: Any) -> PydanticModelType | None:
+        document = await self.collection.find_one(filters)
+        if not document:
+            return None
+        return self.model_class.model_validate(document)

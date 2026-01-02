@@ -27,7 +27,7 @@ async def create_user(
 
 
 @router.post(
-    path="/token/",
+    path="/login/",
     response_model=TokenResponse,
     status_code=status.HTTP_200_OK,
     summary="Authenticate a user and return an access token",
