@@ -1,9 +1,9 @@
 from pymongo import AsyncMongoClient
 
-from src.api.repositories.urls import URLRepository
 from src.core.errors import URLNotFoundException
-from src.db.models.pydantic import URLModel
-from src.db.schemas.url import LongUrlRequest
+from src.models.pydantic import URLModel
+from src.repositories.urls import URLRepository
+from src.schemas.url import LongUrlRequest
 
 
 class URLService:

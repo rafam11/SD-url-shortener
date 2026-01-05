@@ -9,7 +9,7 @@ services:
     ports:
       - "${POSTGRES_PORT}:5432"
     volumes:
-      - ./src/db/init/postgres:/docker-entrypoint-initdb.d
+      - ./db/init/postgres:/docker-entrypoint-initdb.d
       - type: tmpfs 
         target: /var/lib/postgresql/data
     restart: unless-stopped
@@ -24,15 +24,15 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
       MONGO_INITDB_DATABASE: ${MONGO_DB}
     volumes:
-      - ./src/db/init/mongo:/docker-entrypoint-initdb.d
+      - ./db/init/mongo:/docker-entrypoint-initdb.d
       - type: tmpfs 
         target: /data/db
     restart: unless-stopped
   api:
     build:
-      context: .
+      context: ./api
       dockerfile: Dockerfile
-    container_name: fastapi_service
+    container_name: fastapi_app
     ports:
       - "8000:80"
     depends_on:

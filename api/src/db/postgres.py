@@ -1,5 +1,5 @@
-from pymongo import AsyncMongoClient
-from pymongo.errors import ConnectionFailure
+from src.core.config import settings
+
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
@@ -7,8 +7,7 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
     async_sessionmaker,
 )
-from src.db.utils.settings import settings
-from typing import AsyncGenerator, ClassVar
+from typing import AsyncGenerator
 
 
 class SessionManager:
@@ -41,37 +40,6 @@ class SessionManager:
         """Dispose of the database engine."""
         if self.engine:
             await self.engine.dispose()
-
-
-class MongoClient:
-    """Manages asynchronous MongoDB client session."""
-
-    _client: ClassVar[AsyncMongoClient | None] = None
-
-    @classmethod
-    async def start_client(cls):
-        """Initialize the database client and verify connection."""
-        if cls._client is not None:
-            return
-        try:
-            client = AsyncMongoClient(host=str(settings.mongo_uri))
-            await client.admin.command("ping")
-            cls._client = client
-        except ConnectionFailure as exc:
-            await client.close()
-            raise RuntimeError("MongoDB connection failed during startup") from exc
-
-    @classmethod
-    def get_client(cls) -> AsyncMongoClient:
-        if cls._client is None:
-            raise RuntimeError("MongoDB client has not been initialized")
-        return cls._client
-
-    @classmethod
-    async def close_client(cls):
-        if cls._client is not None:
-            await cls._client.close()
-            cls._client = None
 
 
 session_manager: SessionManager = SessionManager()

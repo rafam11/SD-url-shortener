@@ -2,11 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import RedirectResponse
 from pymongo import AsyncMongoClient
 
-from src.api.services.urls import URLService
-from src.auth.helpers.security import verify_access_token
+from src.auth.security import verify_access_token
 from src.core.errors import URLNotFoundException, RecordAlreadyExists
-from src.db.schemas.url import LongUrlRequest, ShortUrlResponse
-from src.db.session import MongoClient
+from src.schemas.url import LongUrlRequest, ShortUrlResponse
+from src.services.urls import URLService
+from src.db.mongo import MongoClient
 
 router: APIRouter = APIRouter(prefix="/urls", tags=["urls"])
 

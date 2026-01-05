@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.api.services.users import UserService
-from src.auth.helpers.security import create_access_token
+from src.auth.security import create_access_token
 from src.core import constants as cons
 from src.core.errors import InvalidCredentialsError
-from src.db.schemas.token import TokenResponse
-from src.db.schemas.user import CreateUserRequest, LoginUserRequest, UserResponse
-from src.db.session import session_manager
+from src.db.postgres import session_manager
+from src.schemas.token import TokenResponse
+from src.schemas.user import CreateUserRequest, LoginUserRequest, UserResponse
+from src.services.users import UserService
 
 router: APIRouter = APIRouter(prefix="/users", tags=["users"])
 

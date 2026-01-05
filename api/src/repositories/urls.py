@@ -1,7 +1,7 @@
 from pymongo import AsyncMongoClient
-from src.api.repositories.base import BaseMongoRepository
-from src.db.models.pydantic import URLModel
-from src.db.utils.settings import settings
+from src.core.config import settings
+from src.models.pydantic import URLModel
+from src.repositories.base import BaseMongoRepository
 
 
 class URLRepository(BaseMongoRepository):

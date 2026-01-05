@@ -1,8 +1,9 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from src.api.controllers.users import router as users_router
-from src.api.controllers.urls import router as urls_router
-from src.db.session import MongoClient, session_manager
+from src.db.mongo import MongoClient
+from src.db.postgres import session_manager
+from src.routers.users import router as users_router
+from src.routers.urls import router as urls_router
 
 
 @asynccontextmanager
