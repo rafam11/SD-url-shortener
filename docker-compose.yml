@@ -12,7 +12,11 @@ services:
       - ./db/init/postgres:/docker-entrypoint-initdb.d
       - type: tmpfs 
         target: /var/lib/postgresql/data
-    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   mongo:
     image: mongo:7
     container_name: mongodb_service
@@ -27,17 +31,28 @@ services:
       - ./db/init/mongo:/docker-entrypoint-initdb.d
       - type: tmpfs 
         target: /data/db
-    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  kgs:
+    build:
+      context: ./kgs
+      dockerfile: Dockerfile
+    container_name: key_gen_service
+    expose:
+      - "80"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   api:
     build:
       context: ./api
       dockerfile: Dockerfile
     container_name: fastapi_app
-    ports:
-      - "8000:80"
-    depends_on:
-      - postgres
-      - mongo
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -50,4 +65,12 @@ services:
       MONGO_PASSWORD: ${MONGO_PASSWORD}
       MONGO_HOST: ${MONGO_HOST}
       MONGO_PORT: ${MONGO_PORT}
-    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+      kgs:
+        condition: service_healthy
+    ports:
+      - "8000:80"
