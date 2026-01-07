@@ -16,7 +16,7 @@ class KGSClient:
             return
         try:
             client = AsyncClient(base_url=str(settings.kgs_url))
-            response = await client.head("/health")
+            response = await client.get("/health")
             response.raise_for_status()
             cls._client = client
         except HTTPError as exc:
