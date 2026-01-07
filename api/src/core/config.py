@@ -1,4 +1,4 @@
-from pydantic import MongoDsn, PostgresDsn
+from pydantic import HttpUrl, MongoDsn, PostgresDsn
 from pydantic_settings import BaseSettings
 
 
@@ -16,6 +16,9 @@ class Settings(BaseSettings):
     mongo_password: str
     mongo_host: str
     mongo_port: int
+
+    kgs_host: str
+    kgs_port: int
 
     @property
     def postgres_uri(self) -> PostgresDsn:
@@ -37,6 +40,14 @@ class Settings(BaseSettings):
             host=self.mongo_host,
             port=self.mongo_port,
             path=self.mongo_db,
+        )
+
+    @property
+    def kgs_url(self) -> HttpUrl:
+        return HttpUrl.build(
+            scheme="http",
+            host=self.kgs_host,
+            port=self.kgs_port,
         )
 
 

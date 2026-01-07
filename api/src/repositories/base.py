@@ -5,7 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.core import constants as cons
 from src.core.errors import RecordAlreadyExists
-from src.db.base import Base
+from src.clients.base import Base
 from src.utils.retry import retry
 
 from typing import Any, Generic, TypeVar

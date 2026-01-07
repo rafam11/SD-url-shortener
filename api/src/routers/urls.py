@@ -1,12 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import RedirectResponse
-from pymongo import AsyncMongoClient
 
 from src.auth.security import verify_access_token
 from src.core.errors import URLNotFoundException, RecordAlreadyExists
+from src.dependencies import get_url_service
 from src.schemas.url import LongUrlRequest, ShortUrlResponse
 from src.services.urls import URLService
-from src.db.mongo import MongoClient
 
 router: APIRouter = APIRouter(prefix="/urls", tags=["urls"])
 
@@ -21,10 +20,10 @@ router: APIRouter = APIRouter(prefix="/urls", tags=["urls"])
 async def short_url(
     long_url: LongUrlRequest,
     user_id: str = Depends(verify_access_token),
-    client: AsyncMongoClient = Depends(MongoClient.get_client),
+    service: URLService = Depends(get_url_service),
 ):
     try:
-        return await URLService(client).shorten_url(user_id, long_url)
+        return await service.shorten_url(user_id, long_url)
     except RecordAlreadyExists:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT, detail="URL already exists"
@@ -33,10 +32,11 @@ async def short_url(
 
 @router.get(path="/{short_url}")
 async def redirect(
-    short_url: str, client: AsyncMongoClient = Depends(MongoClient.get_client)
+    short_url: str,
+    service: URLService = Depends(get_url_service),
 ):
     try:
-        long_url = await URLService(client).retrieve_long_url(short_url)
+        long_url = await service.retrieve_long_url(short_url)
         return RedirectResponse(
             url=long_url, status_code=status.HTTP_301_MOVED_PERMANENTLY
         )

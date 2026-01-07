@@ -1,7 +1,7 @@
 import src.core.constants as cons
 
 from datetime import datetime
-from src.db.base import Base
+from src.clients.base import Base
 from sqlalchemy import ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import TIMESTAMP, BigInteger, Boolean, Integer, String

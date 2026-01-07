@@ -65,6 +65,8 @@ services:
       MONGO_PASSWORD: ${MONGO_PASSWORD}
       MONGO_HOST: ${MONGO_HOST}
       MONGO_PORT: ${MONGO_PORT}
+      KGS_HOST: ${KGS_HOST}
+      KGS_PORT: ${KGS_PORT}
     depends_on:
       postgres:
         condition: service_healthy
