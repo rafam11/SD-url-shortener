@@ -1,5 +1,7 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+
+from src.core import constants as cons
 from src.clients.kgs import KGSClient
 from src.clients.mongo import MongoClient
 from src.clients.postgres import session_manager
@@ -19,5 +21,5 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-app.include_router(users_router)
-app.include_router(urls_router)
+app.include_router(users_router, prefix=cons.API_V1_PREFIX)
+app.include_router(urls_router, prefix=cons.API_V1_PREFIX)

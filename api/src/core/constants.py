@@ -1,5 +1,7 @@
 from enum import StrEnum
 
+API_V1_PREFIX = "/api/v1"
+
 # Auth constants
 WWW_AUTH_HEADER = "WWW-Authenticate"
 BEARER_AUTH = "Bearer"
