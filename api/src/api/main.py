@@ -1,12 +1,13 @@
 from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 
-from api.core import constants as cons
 from api.clients.kgs import KGSClient
 from api.clients.mongo import MongoClient
 from api.clients.postgres import session_manager
-from api.routers.users import router as users_router
+from api.core import constants as cons
 from api.routers.urls import router as urls_router
+from api.routers.users import router as users_router
 
 
 @asynccontextmanager

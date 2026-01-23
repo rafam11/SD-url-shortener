@@ -1,14 +1,15 @@
+from typing import Any, Generic, TypeVar
+
 from pydantic import BaseModel
 from pymongo import AsyncMongoClient
 from pymongo.errors import DuplicateKeyError
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from api.clients.base import Base
 from api.core import constants as cons
 from api.core.errors import RecordAlreadyExists
-from api.clients.base import Base
 from api.utils.retry import retry
-
-from typing import Any, Generic, TypeVar
 
 SQLAlchemyModelType = TypeVar("SQLAlchemyModelType", bound=Base)
 PydanticModelType = TypeVar("PydanticModelType", bound=BaseModel)

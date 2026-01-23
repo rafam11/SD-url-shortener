@@ -1,7 +1,8 @@
-from httpx import AsyncClient, HTTPError
-from api.core.config import settings
-
 from typing import ClassVar
+
+from httpx import AsyncClient, HTTPError
+
+from api.core.config import settings
 
 
 class KGSClient:

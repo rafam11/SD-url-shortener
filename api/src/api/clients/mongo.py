@@ -1,8 +1,9 @@
-from api.core.config import settings
+from typing import ClassVar
 
 from pymongo import AsyncMongoClient
 from pymongo.errors import ConnectionFailure
-from typing import ClassVar
+
+from api.core.config import settings
 
 
 class MongoClient:

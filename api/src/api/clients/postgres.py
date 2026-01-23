@@ -1,13 +1,14 @@
-from api.core.config import settings
+from typing import AsyncGenerator
 
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.ext.asyncio import (
-    AsyncSession,
     AsyncEngine,
-    create_async_engine,
+    AsyncSession,
     async_sessionmaker,
+    create_async_engine,
 )
-from typing import AsyncGenerator
+
+from api.core.config import settings
 
 
 class SessionManager:

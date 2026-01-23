@@ -1,10 +1,11 @@
-import api.core.constants as cons
-
 from datetime import datetime
-from api.clients.base import Base
+
 from sqlalchemy import ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import TIMESTAMP, BigInteger, Boolean, Integer, String
+
+import api.core.constants as cons
+from api.clients.base import Base
 
 
 class Users(Base):

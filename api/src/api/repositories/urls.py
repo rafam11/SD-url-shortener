@@ -1,4 +1,5 @@
 from pymongo import AsyncMongoClient
+
 from api.core.config import settings
 from api.models.pydantic import URLModel
 from api.repositories.base import BaseMongoRepository

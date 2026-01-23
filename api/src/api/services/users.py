@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.auth.security import get_password_hash, verify_password
 from api.core.errors import InvalidCredentialsError
-from api.models.sqlalchemy import Users, UserLogins
+from api.models.sqlalchemy import UserLogins, Users
 from api.repositories.users import UserRepository
 from api.schemas.user import CreateUserRequest, LoginUserRequest
 

@@ -6,9 +6,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from api.clients.kgs import KGSClient
 from api.clients.mongo import MongoClient
 from api.clients.postgres import session_manager
-from api.services.users import UserService
-from api.services.urls import URLService
 from api.services.kgs import KGSService
+from api.services.urls import URLService
+from api.services.users import UserService
 
 
 def get_user_service(

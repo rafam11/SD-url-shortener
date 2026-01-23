@@ -1,5 +1,6 @@
-from bson import Int64
 from datetime import datetime
+
+from bson import Int64
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import RedirectResponse
 
 from api.auth.security import verify_access_token
-from api.core.errors import URLNotFoundException, RecordAlreadyExists
+from api.core.errors import RecordAlreadyExists, URLNotFoundException
 from api.dependencies import get_url_service
 from api.schemas.url import LongUrlRequest, ShortUrlResponse
 from api.services.urls import URLService

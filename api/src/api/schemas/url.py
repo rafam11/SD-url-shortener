@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
+from typing import List
 
 from pydantic import BaseModel, ConfigDict, Field, HttpUrl
-from typing import List
 
 
 class LongUrlRequest(BaseModel):
