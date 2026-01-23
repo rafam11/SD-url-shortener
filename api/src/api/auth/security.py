@@ -1,7 +1,7 @@
 import jwt
 
-import src.core.constants as cons
-from src.core.config import settings
+import api.core.constants as cons
+from api.core.config import settings
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer

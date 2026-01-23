@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from src.auth.security import create_access_token
-from src.dependencies import get_user_service
-from src.core import constants as cons
-from src.core.errors import InvalidCredentialsError
-from src.schemas.token import TokenResponse
-from src.schemas.user import CreateUserRequest, LoginUserRequest, UserResponse
-from src.services.users import UserService
+from api.auth.security import create_access_token
+from api.dependencies import get_user_service
+from api.core import constants as cons
+from api.core.errors import InvalidCredentialsError
+from api.schemas.token import TokenResponse
+from api.schemas.user import CreateUserRequest, LoginUserRequest, UserResponse
+from api.services.users import UserService
 
 router: APIRouter = APIRouter(prefix="/users", tags=["users"])
 

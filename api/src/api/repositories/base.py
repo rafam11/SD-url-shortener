@@ -3,10 +3,10 @@ from pymongo import AsyncMongoClient
 from pymongo.errors import DuplicateKeyError
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.core import constants as cons
-from src.core.errors import RecordAlreadyExists
-from src.clients.base import Base
-from src.utils.retry import retry
+from api.core import constants as cons
+from api.core.errors import RecordAlreadyExists
+from api.clients.base import Base
+from api.utils.retry import retry
 
 from typing import Any, Generic, TypeVar
 

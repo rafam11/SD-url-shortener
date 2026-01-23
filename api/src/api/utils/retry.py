@@ -1,7 +1,7 @@
 import asyncio
 from functools import wraps
 from pymongo.errors import ConnectionFailure, NetworkTimeout, PyMongoError
-from src.core import constants as cons
+from api.core import constants as cons
 
 
 def retry(times: int, backoff: float = cons.BACKOFF_FACTOR):

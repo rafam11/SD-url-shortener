@@ -1,13 +1,15 @@
-FROM python:3.12-slim
+FROM sd-url-shortener-base:latest
 
-WORKDIR /code
+WORKDIR /app
 
-COPY ./requirements.txt /code/requirements.txt
+RUN apt-get update \
+    && apt-get install -y curl \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install -y curl
+COPY /kgs/src /app/src/
 
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+ENV PYTHONPATH=/app/src
 
-COPY ./src /code/src
+EXPOSE 8001
 
-CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["python", "-m", "uvicorn", "kgs.main:app", "--host", "0.0.0.0", "--port", "8001"]

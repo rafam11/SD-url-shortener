@@ -1,4 +1,4 @@
-from src.core.config import settings
+from api.core.config import settings
 
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.ext.asyncio import (

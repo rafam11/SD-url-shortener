@@ -3,12 +3,12 @@ from httpx import AsyncClient
 from pymongo import AsyncMongoClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.clients.kgs import KGSClient
-from src.clients.mongo import MongoClient
-from src.clients.postgres import session_manager
-from src.services.users import UserService
-from src.services.urls import URLService
-from src.services.kgs import KGSService
+from api.clients.kgs import KGSClient
+from api.clients.mongo import MongoClient
+from api.clients.postgres import session_manager
+from api.services.users import UserService
+from api.services.urls import URLService
+from api.services.kgs import KGSService
 
 
 def get_user_service(

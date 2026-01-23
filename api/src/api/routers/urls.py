@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import RedirectResponse
 
-from src.auth.security import verify_access_token
-from src.core.errors import URLNotFoundException, RecordAlreadyExists
-from src.dependencies import get_url_service
-from src.schemas.url import LongUrlRequest, ShortUrlResponse
-from src.services.urls import URLService
+from api.auth.security import verify_access_token
+from api.core.errors import URLNotFoundException, RecordAlreadyExists
+from api.dependencies import get_url_service
+from api.schemas.url import LongUrlRequest, ShortUrlResponse
+from api.services.urls import URLService
 
 router: APIRouter = APIRouter(prefix="/urls", tags=["urls"])
 

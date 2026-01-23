@@ -1,4 +1,4 @@
-from src.core.config import settings
+from api.core.config import settings
 
 from pymongo import AsyncMongoClient
 from pymongo.errors import ConnectionFailure

@@ -1,5 +1,5 @@
 from httpx import AsyncClient, HTTPError
-from src.core.config import settings
+from api.core.config import settings
 
 from typing import ClassVar
 

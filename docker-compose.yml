@@ -1,4 +1,40 @@
 services:
+  base:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sd-url-shortener-base:latest
+    command: "true"
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    container_name: fastapi_app
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      SECRET_KEY: ${SECRET_KEY}
+      MONGO_DB: ${MONGO_DB}
+      MONGO_USER: ${MONGO_USER}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_HOST: ${MONGO_HOST}
+      MONGO_PORT: ${MONGO_PORT}
+      KGS_HOST: ${KGS_HOST}
+      KGS_PORT: ${KGS_PORT}
+    depends_on:
+      base:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+      kgs:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
   postgres:
     image: postgres:16-alpine
     container_name: postgres_service
@@ -38,41 +74,14 @@ services:
       retries: 5
   kgs:
     build:
-      context: ./kgs
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: kgs/Dockerfile
     container_name: key_gen_service
-    expose:
-      - "80"
+    depends_on:
+      base:
+        condition: service_completed_successfully
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
       interval: 10s
       timeout: 5s
       retries: 5
-  api:
-    build:
-      context: ./api
-      dockerfile: Dockerfile
-    container_name: fastapi_app
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_HOST: ${POSTGRES_HOST}
-      POSTGRES_PORT: ${POSTGRES_PORT}
-      SECRET_KEY: ${SECRET_KEY}
-      MONGO_DB: ${MONGO_DB}
-      MONGO_USER: ${MONGO_USER}
-      MONGO_PASSWORD: ${MONGO_PASSWORD}
-      MONGO_HOST: ${MONGO_HOST}
-      MONGO_PORT: ${MONGO_PORT}
-      KGS_HOST: ${KGS_HOST}
-      KGS_PORT: ${KGS_PORT}
-    depends_on:
-      postgres:
-        condition: service_healthy
-      mongo:
-        condition: service_healthy
-      kgs:
-        condition: service_healthy
-    ports:
-      - "8000:80"

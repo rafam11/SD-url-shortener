@@ -1,10 +1,10 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.auth.security import get_password_hash, verify_password
-from src.core.errors import InvalidCredentialsError
-from src.models.sqlalchemy import Users, UserLogins
-from src.repositories.users import UserRepository
-from src.schemas.user import CreateUserRequest, LoginUserRequest
+from api.auth.security import get_password_hash, verify_password
+from api.core.errors import InvalidCredentialsError
+from api.models.sqlalchemy import Users, UserLogins
+from api.repositories.users import UserRepository
+from api.schemas.user import CreateUserRequest, LoginUserRequest
 
 
 class UserService:
