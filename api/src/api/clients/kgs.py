@@ -2,7 +2,7 @@ from typing import ClassVar
 
 from httpx import AsyncClient, HTTPError
 
-from api.core.config import settings
+from api.core.config import Settings
 
 
 class KGSClient:
@@ -11,7 +11,7 @@ class KGSClient:
     _client: ClassVar[AsyncClient | None] = None
 
     @classmethod
-    async def start_client(cls):
+    async def start_client(cls, settings: Settings):
         """Initialize the HTTP client and verify connection."""
         if cls._client is not None:
             return

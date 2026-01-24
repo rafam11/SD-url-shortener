@@ -4,19 +4,21 @@ from fastapi import FastAPI
 
 from api.clients.kgs import KGSClient
 from api.clients.mongo import MongoClient
-from api.clients.postgres import session_manager
+from api.clients.postgres import SessionManager
 from api.core import constants as cons
+from api.core.config import get_settings
 from api.routers.urls import router as urls_router
 from api.routers.users import router as users_router
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    session_manager.run_engine()
-    await MongoClient.start_client()
-    await KGSClient.start_client()
+    settings = get_settings()
+    SessionManager.run_engine(settings)
+    await MongoClient.start_client(settings)
+    await KGSClient.start_client(settings)
     yield
-    await session_manager.close()
+    await SessionManager.close()
     await MongoClient.close_client()
     await KGSClient.close_client()
 

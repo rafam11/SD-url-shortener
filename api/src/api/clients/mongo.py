@@ -3,7 +3,7 @@ from typing import ClassVar
 from pymongo import AsyncMongoClient
 from pymongo.errors import ConnectionFailure
 
-from api.core.config import settings
+from api.core.config import Settings
 
 
 class MongoClient:
@@ -12,12 +12,12 @@ class MongoClient:
     _client: ClassVar[AsyncMongoClient | None] = None
 
     @classmethod
-    async def start_client(cls):
+    async def start_client(cls, settings: Settings):
         """Initialize the database client and verify connection."""
         if cls._client is not None:
             return
         try:
-            client = AsyncMongoClient(host=str(settings.mongo_uri))
+            client: AsyncMongoClient = AsyncMongoClient(host=str(settings.mongo_uri))
             await client.admin.command("ping")
             cls._client = client
         except ConnectionFailure as exc:

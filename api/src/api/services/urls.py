@@ -11,10 +11,11 @@ class URLService:
     def __init__(
         self,
         client: AsyncMongoClient,
+        database_name: str,
         kgs_service: KGSService,
     ):
         self.kgs_service = kgs_service
-        self.repository = URLRepository(client)
+        self.repository = URLRepository(client, database_name)
 
     async def shorten_url(self, user_id: str, request_url: LongUrlRequest) -> URLModel:
         short_url = await self.kgs_service.get_short_url_key()

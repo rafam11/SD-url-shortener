@@ -1,4 +1,4 @@
-from typing import AsyncGenerator
+from typing import AsyncGenerator, ClassVar
 
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.ext.asyncio import (
@@ -8,39 +8,43 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
-from api.core.config import settings
+from api.core.config import Settings
 
 
 class SessionManager:
     """Manages asynchronous database sessions."""
 
-    def __init__(self) -> None:
-        self.engine: AsyncEngine | None = None
-        self.session_factory: async_sessionmaker[AsyncSession] | None = None
+    _engine: ClassVar[AsyncEngine | None] = None
+    _session_factory: ClassVar[async_sessionmaker[AsyncSession] | None] = None
 
-    def run_engine(self):
+    @classmethod
+    def run_engine(cls, settings: Settings) -> None:
         """Initialize the database engine and session factory."""
-        self.engine = create_async_engine(url=str(settings.postgres_uri), echo=True)
-        self.session_factory = async_sessionmaker(
-            self.engine, expire_on_commit=False, autoflush=False, class_=AsyncSession
+        if cls._engine is not None:
+            return
+
+        cls._engine = create_async_engine(url=str(settings.postgres_uri), echo=True)
+        cls._session_factory = async_sessionmaker(
+            cls._engine, expire_on_commit=False, autoflush=False, class_=AsyncSession
         )
 
-    async def get_session(self) -> AsyncGenerator[AsyncSession, None]:
+    @classmethod
+    async def get_session(cls) -> AsyncGenerator[AsyncSession, None]:
         """Yield a database session."""
-        if not self.session_factory:
+        if cls._session_factory is None:
             raise InvalidRequestError("Session has not been initialized")
 
-        async with self.session_factory() as session:
+        async with cls._session_factory() as session:
             try:
                 yield session
             except Exception:
                 await session.rollback()
                 raise
 
-    async def close(self) -> None:
+    @classmethod
+    async def close(cls) -> None:
         """Dispose of the database engine."""
-        if self.engine:
-            await self.engine.dispose()
-
-
-session_manager: SessionManager = SessionManager()
+        if cls._engine is not None:
+            await cls._engine.dispose()
+            cls._engine = None
+            cls._session_factory = None
