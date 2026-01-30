@@ -49,6 +49,7 @@ testpaths = [
     "kgs/tests"
 ]
 addopts = "--cov=app --cov-report=term"
+asyncio_mode = "auto"
 
 [dependency-groups]
 dev = [
