@@ -85,7 +85,7 @@ class TestCreateAccessToken:
         payload = jwt.decode(
             jwt=token, key=secret_key, algorithms=[cons.HMAC_SHA256_ALGORITHM]
         )
-        assert isinstance(token, bytes)
+        assert isinstance(token, str)
         assert payload["sub"] == str(user_id)
 
 

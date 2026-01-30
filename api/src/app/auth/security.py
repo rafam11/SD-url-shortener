@@ -1,12 +1,11 @@
 from datetime import datetime, timedelta, timezone
 
+import app.core.constants as cons
 import jwt
+from app.core.config import Settings, get_settings
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pwdlib.hashers.bcrypt import BcryptHasher
-
-import app.core.constants as cons
-from app.core.config import Settings, get_settings
 
 hasher = BcryptHasher()
 auth_headers = HTTPBearer()
@@ -22,7 +21,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 def create_access_token(
     user_id: int, secret_key: str, expires_delta: int | None = None
-) -> bytes:
+) -> bytes | str:
     expire_minutes = expires_delta if expires_delta else cons.DEFAULT_EXPIRE_JWT_TOKEN
     payload = {
         "sub": str(user_id),
