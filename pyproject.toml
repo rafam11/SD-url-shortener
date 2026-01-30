@@ -33,6 +33,11 @@ dependencies = [
 plugins = [
     "pydantic.mypy"
 ]
+mypy_path = [
+    "api/src",
+    "kgs/src"
+]
+explicit_package_bases = true
 
 [tool.pytest.ini_options]
 pythonpath = [

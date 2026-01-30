@@ -22,13 +22,13 @@ def mock_settings() -> Generator[MagicMock, None, None]:
     mock.kgs_host = "localhost"
     mock.kgs_port = 8080
 
-    with patch("api.main.get_settings", return_value=mock):
+    with patch("app.main.get_settings", return_value=mock):
         yield mock
 
 
 @pytest.fixture
 def mock_session_manager() -> Generator[MagicMock, None, None]:
-    with patch("api.main.SessionManager") as mock:
+    with patch("app.main.SessionManager") as mock:
         mock.run_engine = MagicMock()
         mock.close = AsyncMock()
         yield mock
@@ -36,7 +36,7 @@ def mock_session_manager() -> Generator[MagicMock, None, None]:
 
 @pytest.fixture
 def mock_mongo_client() -> Generator[MagicMock, None, None]:
-    with patch("api.main.MongoClient") as mock:
+    with patch("app.main.MongoClient") as mock:
         mock.start_client = AsyncMock()
         mock.close_client = AsyncMock()
         yield mock
@@ -44,7 +44,7 @@ def mock_mongo_client() -> Generator[MagicMock, None, None]:
 
 @pytest.fixture
 def mock_kgs_client() -> Generator[MagicMock, None, None]:
-    with patch("api.main.KGSClient") as mock:
+    with patch("app.main.KGSClient") as mock:
         mock.start_client = AsyncMock()
         mock.close_client = AsyncMock()
         yield mock
