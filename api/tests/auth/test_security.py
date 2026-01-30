@@ -17,7 +17,9 @@ from fastapi.security import HTTPAuthorizationCredentials
 @pytest.fixture
 def mock_settings() -> Settings:
     """Mock settings for testing."""
-    return MagicMock(spec=Settings, secret_key="test_secret_key")
+    return MagicMock(
+        spec=Settings, secret_key="very_secure_and_long_test_secret_key_12345"
+    )
 
 
 @pytest.fixture
@@ -46,7 +48,7 @@ def user_id() -> int:
 @pytest.fixture
 def secret_key() -> str:
     """Test secret key for JWT."""
-    return "test_secret_key"
+    return "very_secure_and_long_test_secret_key_12345"
 
 
 class TestPasswordHashing:
