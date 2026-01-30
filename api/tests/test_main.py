@@ -2,7 +2,7 @@ from typing import Generator
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-from api.main import app, lifespan
+from app.main import app, lifespan
 
 
 @pytest.fixture

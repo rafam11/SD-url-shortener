@@ -6,10 +6,10 @@ from pymongo.errors import DuplicateKeyError
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.clients.base import Base
-from api.core import constants as cons
-from api.core.errors import RecordAlreadyExists
-from api.utils.retry import retry
+from app.clients.base import Base
+from app.core import constants as cons
+from app.core.errors import RecordAlreadyExists
+from app.utils.retry import retry
 
 SQLAlchemyModelType = TypeVar("SQLAlchemyModelType", bound=Base)
 PydanticModelType = TypeVar("PydanticModelType", bound=BaseModel)

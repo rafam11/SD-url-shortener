@@ -5,8 +5,8 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pwdlib.hashers.bcrypt import BcryptHasher
 
-import api.core.constants as cons
-from api.core.config import Settings, get_settings
+import app.core.constants as cons
+from app.core.config import Settings, get_settings
 
 hasher = BcryptHasher()
 auth_headers = HTTPBearer()

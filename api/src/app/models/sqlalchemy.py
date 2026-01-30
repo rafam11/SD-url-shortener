@@ -4,8 +4,8 @@ from sqlalchemy import ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import TIMESTAMP, BigInteger, Boolean, Integer, String
 
-import api.core.constants as cons
-from api.clients.base import Base
+import app.core.constants as cons
+from app.clients.base import Base
 
 
 class Users(Base):

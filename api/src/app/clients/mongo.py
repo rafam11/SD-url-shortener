@@ -3,7 +3,7 @@ from typing import ClassVar
 from pymongo import AsyncMongoClient
 from pymongo.errors import ConnectionFailure
 
-from api.core.config import Settings
+from app.core.config import Settings
 
 
 class MongoClient:

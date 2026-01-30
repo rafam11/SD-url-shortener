@@ -1,10 +1,10 @@
 from pymongo import AsyncMongoClient
 
-from api.core.errors import URLNotFoundException
-from api.models.pydantic import URLModel
-from api.repositories.urls import URLRepository
-from api.schemas.url import LongUrlRequest
-from api.services.kgs import KGSService
+from app.core.errors import URLNotFoundException
+from app.models.pydantic import URLModel
+from app.repositories.urls import URLRepository
+from app.schemas.url import LongUrlRequest
+from app.services.kgs import KGSService
 
 
 class URLService:

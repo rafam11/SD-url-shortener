@@ -2,7 +2,7 @@ from typing import ClassVar
 
 from httpx import AsyncClient, HTTPError
 
-from api.core.config import Settings
+from app.core.config import Settings
 
 
 class KGSClient:
