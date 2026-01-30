@@ -48,6 +48,7 @@ testpaths = [
     "api/tests",
     "kgs/tests"
 ]
+addopts = "--cov=app --cov-report=term"
 
 [dependency-groups]
 dev = [
