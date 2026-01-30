@@ -8,9 +8,9 @@ COPY ./api/tests /app/tests
 ENV PYTHONPATH=/app/src
 
 RUN pytest \
-    --cov=app \
     --cov-report=term-missing \
-    --cov-report=xml
+    --cov=app \
+    tests/
 
 EXPOSE 8000
 
