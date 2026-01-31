@@ -3,8 +3,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      target: runtime
     image: sd-url-shortener-base:latest
-    command: "true"
+    profiles:
+      - build-only
   api:
     build:
       context: .
@@ -25,8 +27,6 @@ services:
       KGS_HOST: ${KGS_HOST}
       KGS_PORT: ${KGS_PORT}
     depends_on:
-      base:
-        condition: service_completed_successfully
       postgres:
         condition: service_healthy
       mongo:
@@ -77,9 +77,6 @@ services:
       context: .
       dockerfile: kgs/Dockerfile
     container_name: key_gen_service
-    depends_on:
-      base:
-        condition: service_completed_successfully
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
       interval: 10s
@@ -91,8 +88,6 @@ services:
       dockerfile: lb/Dockerfile
     container_name: load_balancer
     depends_on:
-      base:
-        condition: service_completed_successfully
       token1:
         condition: service_started
       token2:

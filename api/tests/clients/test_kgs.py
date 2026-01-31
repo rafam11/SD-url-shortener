@@ -1,6 +1,7 @@
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
+import pytest_asyncio
 from app.clients.kgs import KGSClient
 from app.core.config import Settings
 from httpx import AsyncClient, HTTPError
@@ -21,7 +22,7 @@ def mock_async_client():
         yield mock
 
 
-@pytest.fixture(autouse=True)
+@pytest_asyncio.fixture(autouse=True)
 async def reset_kgs_client():
     """Reset KGSClient state before and after each test."""
     KGSClient._client = None

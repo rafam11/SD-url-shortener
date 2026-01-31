@@ -1,6 +1,7 @@
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
+import pytest_asyncio
 from app.clients.mongo import MongoClient
 from app.core.config import Settings
 from pymongo import AsyncMongoClient
@@ -22,7 +23,7 @@ def mock_async_client():
         yield mock
 
 
-@pytest.fixture(autouse=True)
+@pytest_asyncio.fixture(autouse=True)
 async def reset_mongo_client():
     """Reset MongoClient state before and after each test."""
     MongoClient._client = None
