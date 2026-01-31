@@ -94,7 +94,7 @@ class TestMongoClient:
         assert client is mock_instance
         assert isinstance(client, AsyncMongoClient)
 
-    def test_get_client_error(self):
+    async def test_get_client_error(self):
         """Test get_client returns client when it has not been initialized."""
         MongoClient._client = None
 

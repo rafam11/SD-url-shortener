@@ -85,3 +85,47 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  lb:
+    build:
+      context: .
+      dockerfile: lb/Dockerfile
+    container_name: load_balancer
+    depends_on:
+      base:
+        condition: service_completed_successfully
+      token1:
+        condition: service_started
+      token2:
+        condition: service_started
+      token3:
+        condition: service_started
+    environment:
+      SERVERS: "token1:8000,token2:8000,token3:8000"
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  token1:
+    build:
+      context: .
+      dockerfile: ts/Dockerfile
+    container_name: token_service_1
+    expose:
+      - "8000"
+  token2:
+    build:
+      context: .
+      dockerfile: ts/Dockerfile
+    container_name: token_service_2
+    expose:
+      - "8000"
+  token3:
+    build:
+      context: .
+      dockerfile: ts/Dockerfile
+    container_name: token_service_3
+    expose:
+      - "8000"
