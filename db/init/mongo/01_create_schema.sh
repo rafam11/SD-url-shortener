@@ -15,7 +15,7 @@ db.createUser(
         pwd: "$ROOT_PASSWORD",
         roles: [
             {
-                role: "readWrite", 
+                role: "readWrite",
                 db: "$DB_NAME"
             }
         ]
@@ -32,18 +32,18 @@ if (db.getCollectionNames().includes("urls")) {
                 title: "URL object validation",
                 required: [
                     "_id",
-                    "short_url", 
-                    "long_url", 
-                    "created_at", 
-                    "expires_at", 
-                    "user_id", 
-                    "is_active", 
-                    "click_count" 
+                    "short_url",
+                    "long_url",
+                    "created_at",
+                    "expires_at",
+                    "user_id",
+                    "is_active",
+                    "click_count"
                 ],
                 properties: {
                     _id: {
-                        bsonType: "objectId", 
-                        description: "MongoDB unique identifier for the document" 
+                        bsonType: "objectId",
+                        description: "MongoDB unique identifier for the document"
                     },
                     short_url: {
                         bsonType: "string",

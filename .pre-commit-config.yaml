@@ -1,22 +1,40 @@
 repos:
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.10.7
+    hooks:
+      - id: uv-lock
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+    - id: pretty-format-json
+      args: [--autofix]
+    - id: trailing-whitespace
+    - id: check-yaml
+    - id: end-of-file-fixer
+    - id: check-added-large-files
+    - id: check-json
+    - id: check-toml
+    - id: check-yaml
+    - id: check-xml
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.21.2
+    hooks:
+    - id: pyupgrade
   - repo: local
     hooks:
-      - id: ruff
-        name: ruff
-        entry: ruff
+      - id: ruff-formatter
+        name: formatter
+        entry: uv run ruff format
         language: system
         types: [python]
-        args: ["check", "--select", "I", "--fix"]
-
-      - id: ruff-format
-        name: ruff (format)
-        entry: ruff
+      - id: ruff-linter
+        name: linter
+        entry: uv run ruff check --select I --fix
         language: system
         types: [python]
-        args: ["format"]
-
       - id: mypy
-        name: mypy
-        entry: mypy
+        name: type-checker
+        entry: uv run mypy
         language: system
         types: [python]
+        require_serial: true
