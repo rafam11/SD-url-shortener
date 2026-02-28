@@ -95,9 +95,10 @@ services:
       token3:
         condition: service_started
     environment:
-      SERVERS: "token1:8000,token2:8000,token3:8000"
+      SERVERS: ${SERVERS}
+      LOAD_BALANCER_PORT: ${LOAD_BALANCER_PORT}
     ports:
-      - "8080:8080"
+      - "${LOAD_BALANCER_PORT}:${LOAD_BALANCER_PORT}"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 10s

@@ -1,27 +1,20 @@
-import os
+from contextlib import asynccontextmanager
 
-import httpx
 from fastapi import FastAPI
 
-from load_balancer.utils.strategy import (
-    LoadBalancer,
-    RoundRobinStrategy,
-)
-
-app = FastAPI()
-
-servers = [s.strip() for s in os.getenv("SERVERS", "").split(",") if s.strip()]
-lb = LoadBalancer(servers, RoundRobinStrategy())
+from load_balancer.core.config import get_settings
+from load_balancer.routers import health, proxy
+from load_balancer.utils.load_balancer import RoundRobinBalancer
 
 
-@app.get("/key")
-async def get_key():
-    server = lb.get_next_server()
-    async with httpx.AsyncClient() as client:
-        response = await client.get(f"http://{server}/key")
-    return response.json()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    settings = get_settings()
+    servers = settings.get_servers()
+    app.state.load_balancer = RoundRobinBalancer(servers=servers)
+    yield
 
 
-@app.get("/health")
-async def health():
-    return {"status": "ok"}
+app = FastAPI(lifespan=lifespan)
+app.include_router(health.router)
+app.include_router(proxy.router)
