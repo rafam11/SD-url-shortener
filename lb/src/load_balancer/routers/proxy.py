@@ -37,21 +37,26 @@ async def proxy(
     async def forward(server: Server) -> httpx.Response:
         url = f"http://{server.address}/{path}"
         async with httpx.AsyncClient() as client:
-            response = await client.request(
-                method=request.method,
-                url=url,
-                content=body,
-                headers=dict(request.headers),
-                params=dict(request.query_params),
-            )
-        logger.info(
-            "Request forwarded: method=%s, path=%s, server=%s, status=%d",
-            request.method,
-            path,
-            server.address,
-            response.status_code,
-        )
-        return response
+            try:
+                response = await client.request(
+                    method=request.method,
+                    url=url,
+                    content=body,
+                    headers=dict(request.headers),
+                    params=dict(request.query_params),
+                )
+                logger.info(
+                    "Request forwarded: method=%s, path=%s, server=%s, status=%d",
+                    request.method,
+                    path,
+                    server.address,
+                    response.status_code,
+                )
+                return response
+            except httpx.RequestError:
+                await server.set_unhealthy()
+                logger.warning("Server unhealthy: address=%s", server.address)
+                raise
 
     try:
         response = await balancer.handle_request(forward)

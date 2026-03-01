@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 import logging.config
@@ -7,6 +8,7 @@ from fastapi import FastAPI
 
 from load_balancer.core.config import get_settings
 from load_balancer.routers import health, proxy
+from load_balancer.utils.health import restore_servers
 from load_balancer.utils.load_balancer import RoundRobinBalancer
 
 logger = logging.getLogger(__name__)
@@ -29,7 +31,9 @@ async def lifespan(app: FastAPI):
     )
     for server in servers:
         logger.info("Server started: address=%s", server.address)
+    recovery_task = asyncio.create_task(restore_servers(servers=servers))
     yield
+    recovery_task.cancel()
     logger.info("Load balancer shutting down")
 
 

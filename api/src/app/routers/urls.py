@@ -2,7 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import RedirectResponse
 
 from app.auth.security import verify_access_token
-from app.core.errors import RecordAlreadyExists, URLNotFoundException
+from app.core.errors import (
+    KeyGenerationError,
+    RecordAlreadyExists,
+    URLNotFoundException,
+)
 from app.dependencies import get_url_service
 from app.schemas.url import LongUrlRequest, ShortUrlResponse
 from app.services.urls import URLService
@@ -27,6 +31,11 @@ async def short_url(
     except RecordAlreadyExists:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT, detail="URL already exists"
+        )
+    except KeyGenerationError:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Key generation service unavailable",
         )
 
 

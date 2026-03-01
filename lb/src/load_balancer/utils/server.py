@@ -1,4 +1,4 @@
-import threading
+import asyncio
 from dataclasses import dataclass, field
 
 
@@ -18,32 +18,40 @@ class Server:
     port: int
     connections: int = 0
     healthy: bool = True
-    _lock: threading.Lock = field(init=False, repr=False)
+    _lock: asyncio.Lock = field(init=False, repr=False)
 
     def __post_init__(self):
-        self._lock = threading.Lock()
+        self._lock = asyncio.Lock()
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Server):
             return NotImplemented
         return self.host == other.host and self.port == other.port
 
-    def increment_connections(self):
+    async def increment_connections(self):
         """
         Thread-safe increment of active connection count.
         Called when a new request is routed to this server.
         """
-        with self._lock:
+        async with self._lock:
             self.connections += 1
 
-    def decrement_connections(self):
+    async def decrement_connections(self):
         """
         Thread-safe decrement of active connection count.
         Called when a request completes or connection closes.
         """
-        with self._lock:
+        async with self._lock:
             if self.connections > 0:
                 self.connections -= 1
+
+    async def set_healthy(self):
+        async with self._lock:
+            self.healthy = True
+
+    async def set_unhealthy(self):
+        async with self._lock:
+            self.healthy = False
 
     @property
     def address(self) -> str:

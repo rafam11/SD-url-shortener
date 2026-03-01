@@ -8,3 +8,7 @@ class URLNotFoundException(Exception):
 
 class RecordAlreadyExists(Exception):
     """Exception raised when a record already exists in the database."""
+
+
+class KeyGenerationError(Exception):
+    """Exception raised when short URL cannot be created."""

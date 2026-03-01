@@ -46,12 +46,12 @@ class LoadBalancer(ABC):
     ) -> Any:
         """Route a request to the server."""
         server = await self.get_server()
-        server.increment_connections()
+        await server.increment_connections()
         try:
             result = await request_handler(server)
             return result
         finally:
-            server.decrement_connections()
+            await server.decrement_connections()
 
 
 class RoundRobinBalancer(LoadBalancer):
