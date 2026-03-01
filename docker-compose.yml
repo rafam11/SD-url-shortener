@@ -56,7 +56,7 @@ services:
   mongo:
     image: mongo:7
     container_name: mongodb_service
-    command: mongod --quiet
+    command: mongod --quiet --logpath /dev/null
     ports:
       - "${MONGO_PORT}:27017"
     environment:
@@ -97,8 +97,11 @@ services:
     environment:
       SERVERS: ${SERVERS}
       LOAD_BALANCER_PORT: ${LOAD_BALANCER_PORT}
+      LOGGER_CONFIG_PATH: ${LOGGER_CONFIG_PATH}
     ports:
       - "${LOAD_BALANCER_PORT}:${LOAD_BALANCER_PORT}"
+    volumes:
+      - ./config/logger_config.json:/app/config/logger_config.json:ro
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 10s

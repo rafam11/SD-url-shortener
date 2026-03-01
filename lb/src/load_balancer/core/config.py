@@ -1,10 +1,12 @@
 import re
 from functools import lru_cache
+from pathlib import Path
 from typing import Annotated
 
 from pydantic import BeforeValidator
 from pydantic_settings import BaseSettings
 
+from load_balancer.core import constants as lb_cons
 from load_balancer.utils.server import Server
 
 
@@ -35,6 +37,7 @@ def validate_servers(servers: str) -> str:
 class Settings(BaseSettings):
     servers: Annotated[str, BeforeValidator(validate_servers)]
     load_balancer_port: int
+    logger_config_path: Path
 
     def get_servers(self) -> list[Server]:
         """Parse environment variable into a list of Server objects."""
